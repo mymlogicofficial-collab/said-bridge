@@ -1,0 +1,12 @@
+{
+  "name": "said-bridge",
+  "version": "1.0.0",
+  "description": "S.A.I.D. local bridge — connects NexusAI frontend to Ollama",
+  "main": "bridge.js",
+  "scripts": {
+    "start": "node bridge.js"
+  },
+  "dependencies": {
+    "socket.io": "^4.7.5"
+  }
+}
