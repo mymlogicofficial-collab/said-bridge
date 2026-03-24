@@ -1,0 +1,38 @@
+# ── S.A.I.D. Local Stack — docker-compose ────────────────────────────────────
+#
+# BEFORE FIRST RUN:
+#   1. Build the UI:
+#      cd ../said-ui && npm install && npm run build
+#      cp -r dist ../said-bridge/dist
+#
+#   2. Make sure Ollama is running on your host:
+#      ollama serve
+#
+#   3. Start the stack:
+#      docker-compose up --build
+#
+#   4. Open browser: http://localhost:5055
+# ─────────────────────────────────────────────────────────────────────────────
+
+version: "3.9"
+
+services:
+
+  said-bridge:
+    build: .
+    container_name: said-bridge
+    restart: unless-stopped
+    ports:
+      - "5055:5055"
+    environment:
+      - BRIDGE_PORT=5055
+      - OLLAMA_HOST=host.docker.internal   # reaches Ollama on the host machine
+      - OLLAMA_PORT=11434
+      - OLLAMA_MODEL=gemma3:12b            # change to any model you have pulled
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # Linux needs this — Mac/Win already have it
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:5055/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
